@@ -1,0 +1,30 @@
+<idea-plugin>
+
+  <id>com.onseven.dbvis.yguard-unscrambler</id>
+
+  <name>yGuard Unscrambler</name>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.java</depends>
+
+  <description>
+    <![CDATA[
+      Adds Unscrambler support for yGuard's mapping files
+    ]]>
+  </description>
+  <change-notes>
+    <![CDATA[
+      <ul>
+        <li><b>1.0</b> Initial version for yGuard Unscrambler. Uses yGuard 4.0.0</li>
+      </ul>
+    ]]>
+  </change-notes>
+
+  <vendor url="https://github.com/joeljons/yguard-intellij-unscrambler">Joel Jonsson</vendor>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <unscrambleSupport implementation="com.onseven.dbvis.yguard.YGuardUnscrambler"/>
+  </extensions>
+
+</idea-plugin>
