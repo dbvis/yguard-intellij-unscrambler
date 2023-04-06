@@ -3,8 +3,8 @@ plugins {
     id("org.jetbrains.intellij") version "1.13.3"
 }
 
-group = "org.example"
-version = "1.0.0"
+group = "com.onseven.dbvis.yguard-unscrambler"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
