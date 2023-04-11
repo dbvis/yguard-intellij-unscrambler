@@ -1,4 +1,4 @@
-package com.onseven.dbvis.yguard;
+package com.dbvis.yguard;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.unscramble.UnscrambleSupport;

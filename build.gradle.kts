@@ -3,8 +3,8 @@ plugins {
     id("org.jetbrains.intellij") version "1.13.3"
 }
 
-group = "com.onseven.dbvis.yguard-unscrambler"
-version = "1.0.1"
+group = "com.dbvis.yguard-unscrambler"
+version = "1.0.2"
 
 repositories {
     mavenCentral()
@@ -19,7 +19,7 @@ java {
 }
 
 intellij {
-    version.set("2022.2.5")
+    version.set("2023.1")
     plugins.set(listOf("java"))
 }
 
@@ -31,6 +31,5 @@ tasks {
     patchPluginXml {
         version.set("${project.version}")
         sinceBuild.set("222")
-        untilBuild.set("231.*")
     }
 }
