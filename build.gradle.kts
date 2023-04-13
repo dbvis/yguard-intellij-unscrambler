@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.dbvis.yguard-unscrambler"
-version = "1.1.0"
+version = "1.1.1"
 
 repositories {
     mavenCentral()
@@ -31,5 +31,6 @@ tasks {
     patchPluginXml {
         version.set("${project.version}")
         sinceBuild.set("222")
+        untilBuild.set("")
     }
 }
