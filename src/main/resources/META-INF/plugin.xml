@@ -16,6 +16,7 @@
   <change-notes>
     <![CDATA[
       <ul>
+        <li><b>1.2.0</b> Smarter unscrambling of null pointer messages in some cases.
         <li><b>1.1.1</b> Updated plugin info.
         <li><b>1.0.0</b> Initial version for yGuard Unscrambler. Uses yGuard 4.0.0</li>
       </ul>

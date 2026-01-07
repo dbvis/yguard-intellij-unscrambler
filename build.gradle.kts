@@ -4,14 +4,14 @@ plugins {
 }
 
 group = "com.dbvis.yguard-unscrambler"
-version = "1.1.1"
+version = "1.2.0"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("com.yworks:yguard:4.0.0")
+    implementation("com.yworks:yguard:4.1.1")
 }
 
 java {
