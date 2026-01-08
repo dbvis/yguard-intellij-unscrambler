@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.List;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import java.util.regex.Pattern;
 
 
 public class YGuardUnscrambler implements UnscrambleSupport<JComponent> {
-    private static final Pattern npePattern = Pattern.compile("(.*)Cannot invoke \"(.*)\" because \"this.(.*)\" is null(.*)");
+    private static final Pattern npePattern = Pattern.compile("(?<prefix>.*)Cannot invoke \"(?<method>.*)\" (?<reason>because[^\"]*)\"(?<this>this\\.)?(?<field>.*)\" is null(?<suffix>.*)");
     private static final Pattern atPattern = Pattern.compile("at (.+)\\.[^.]+\\(");
     
     @Override
@@ -50,21 +52,35 @@ public class YGuardUnscrambler implements UnscrambleSupport<JComponent> {
             Matcher npeMatcher = npePattern.matcher(in);
             String out = parser.translate(new String[]{in})[0];
             if (npeMatcher.matches()) {
-                String nullField = npeMatcher.group(3);
-                if (i < split.length - 1) {
-                    Matcher nextMatcher = atPattern.matcher(split[i + 1]);
-                    if (nextMatcher.find()) {
-                        String translatedClass = parser.translate(nextMatcher.group(1));
-                        DefaultMutableTreeNode fieldNode = parser.getFieldNode(translatedClass, npeMatcher.group(3), true);
-                        Object userObject = fieldNode.getUserObject();
-                        nullField = parser.getFieldName(userObject);
+                String nullField = npeMatcher.group("field");
+                if (npeMatcher.group("this") != null) {
+                    if (i < split.length - 1) {
+                        Matcher nextMatcher = atPattern.matcher(split[i + 1]);
+                        if (nextMatcher.find()) {
+                            String translatedClass = parser.translate(nextMatcher.group(1));
+                            DefaultMutableTreeNode fieldNode = parser.getFieldNode(translatedClass, npeMatcher.group("field"), true);
+                            Object userObject = fieldNode.getUserObject();
+                            try {
+                                Method getName = Class.forName("com.yworks.yguard.YGuardLogParser$AbstractMappedStruct").getDeclaredMethod("getName");
+                                nullField = (String) getName.invoke(userObject);
+                            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException |
+                                     ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                     }
+                } else {
+                    nullField = parser.translate(new String[]{npeMatcher.group("field")})[0];
                 }
-                out = String.format("%sCannot invoke \"%s\" because \"this.%s\" is null%s",
-                        npeMatcher.group(1),
-                        parser.translate(new String[]{npeMatcher.group(2)})[0],
+
+                out = String.format("%sCannot invoke \"%s\" %s\"%s%s\" is null%s",
+                        npeMatcher.group("prefix"),
+                        parser.translate(new String[]{npeMatcher.group("method")})[0],
+                        npeMatcher.group("reason"),
+                        npeMatcher.group("this") == null ? "" : npeMatcher.group("this"),
                         nullField,
-                        npeMatcher.group(4));
+                        npeMatcher.group("suffix"));
             }
             translatedLines.add(out);
         }
